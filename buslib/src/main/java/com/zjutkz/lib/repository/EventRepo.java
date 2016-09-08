@@ -9,6 +9,13 @@ import com.google.android.agera.Receiver;
 import com.google.android.agera.Repository;
 import com.google.android.agera.Updatable;
 import com.google.android.agera.UpdateDispatcher;
+import com.zjutkz.lib.listener.OnEventReceiveListener;
+import com.zjutkz.lib.updatable.BackgroundUpdatable;
+import com.zjutkz.lib.updatable.ExtendedUpdatable;
+import com.zjutkz.lib.updatable.NormalUpdatable;
+
+import java.util.HashMap;
+import java.util.concurrent.Executor;
 
 /**
  * Created by kangzhe on 16/9/8.
@@ -25,14 +32,93 @@ public final class EventRepo implements Repository<Object>, Receiver<Object>, Ac
 
     private boolean hasUpdatable;
 
+    private HashMap<OnEventReceiveListener,ExtendedUpdatable[]> registeredMap;
+
     public EventRepo() {
         this.updateDispatcher = Observables.updateDispatcher(this);
 
         this.holder = DEFAULT;
 
         postHandler = new Handler();
+
+        registeredMap = new HashMap<>();
     }
 
+    /**
+     * register a listener which refer to activity,fragment or sth like that in main Thread
+     * @param listener
+     */
+    public synchronized void registerInMainThread(OnEventReceiveListener listener){
+        if(registeredMap.containsKey(listener)){
+            throw new RuntimeException("cannot register twice!");
+        }
+
+        NormalUpdatable normalUpdatable = new NormalUpdatable(listener);
+        normalUpdatable.addedIntoRepo(this,null);
+
+        registeredMap.put(listener,new ExtendedUpdatable[]{normalUpdatable});
+    }
+
+    /**
+     * register a listener which refer to activity,fragment or sth like that in background Thread
+     * @param listener
+     */
+    public synchronized void registerInBackgroundThread(OnEventReceiveListener listener){
+        registerInBackgroundThread(listener,null);
+    }
+
+    /**
+     * register a listener which refer to activity,fragment or sth like that in background Thread
+     * @param listener
+     */
+    public synchronized void registerInBackgroundThread(OnEventReceiveListener listener,Executor executor){
+        if(registeredMap.containsKey(listener)){
+            throw new RuntimeException("cannot register twice!");
+        }
+
+        BackgroundUpdatable backgroundUpdatable = new BackgroundUpdatable(listener);
+        backgroundUpdatable.addedIntoRepo(this,executor);
+
+        registeredMap.put(listener,new ExtendedUpdatable[]{backgroundUpdatable});
+    }
+
+    /**
+     * register a listener which refer to activity,fragment or sth like that in both main and background thread
+     * @param listener
+     */
+    public synchronized void register(OnEventReceiveListener listener){
+        register(listener,null);
+    }
+
+    /**
+     * register a listener which refer to activity,fragment or sth like that in both main and background thread
+     * @param listener
+     * @param executor
+     */
+    public synchronized void register(OnEventReceiveListener listener, Executor executor){
+        if(registeredMap.containsKey(listener)){
+            throw new RuntimeException("cannot register twice!");
+        }
+
+        NormalUpdatable normalUpdatable = new NormalUpdatable(listener);
+        BackgroundUpdatable backgroundUpdatable = new BackgroundUpdatable(listener);
+
+        normalUpdatable.addedIntoRepo(this,null);
+        backgroundUpdatable.addedIntoRepo(this,executor);
+
+        registeredMap.put(listener,new ExtendedUpdatable[]{normalUpdatable,backgroundUpdatable});
+    }
+
+    public synchronized void unRegister(OnEventReceiveListener listener) {
+        if (!registeredMap.containsKey(listener)) {
+            throw new RuntimeException("listener is not register!");
+        }
+
+        ExtendedUpdatable[] updatables = registeredMap.get(listener);
+        for(ExtendedUpdatable updatable : updatables){
+            updatable.removedFromRepo(this);
+        }
+    }
 
     @NonNull
     @Override

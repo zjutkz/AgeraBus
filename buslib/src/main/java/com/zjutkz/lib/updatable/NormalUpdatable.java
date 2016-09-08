@@ -1,14 +1,15 @@
 package com.zjutkz.lib.updatable;
 
-import com.google.android.agera.Updatable;
 import com.zjutkz.lib.listener.OnEventReceiveListener;
 import com.zjutkz.lib.repository.EventRepo;
 import com.zjutkz.lib.utils.Predictable;
 
+import java.util.concurrent.Executor;
+
 /**
  * Created by kangzhe on 16/9/8.
  */
-public class NormalUpdatable implements Updatable{
+public class NormalUpdatable implements ExtendedUpdatable{
 
     private OnEventReceiveListener listener;
 
@@ -16,7 +17,8 @@ public class NormalUpdatable implements Updatable{
         this.listener = listener;
     }
 
-    public void addedIntoRepo(EventRepo eventRepo){
+    @Override
+    public void addedIntoRepo(EventRepo eventRepo, Executor executor) {
         eventRepo.addUpdatable(this);
     }
 

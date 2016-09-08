@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.zjutkz.lib.AgeraBus;
 import com.zjutkz.lib.listener.OnEventReceiveListener;
-import com.zjutkz.lib.updatable.NormalUpdatable;
 import com.zjutkz.sample.event.SampleStrEvent;
 
 
@@ -19,19 +18,17 @@ public class MainActivity extends AppCompatActivity implements OnEventReceiveLis
 
     private static final String TAG = "MainActivity";
 
-    private NormalUpdatable normalUpdatable = new NormalUpdatable(this);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        normalUpdatable.addedIntoRepo(AgeraBus.eventRepositories());
+        AgeraBus.eventRepositories().registerInMainThread(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        normalUpdatable.removedFromRepo(AgeraBus.eventRepositories());
+        AgeraBus.eventRepositories().unRegister(this);
     }
 
     public void jump(View view){
@@ -56,13 +53,16 @@ public class MainActivity extends AppCompatActivity implements OnEventReceiveLis
     public void onEventReceiveInMain() {
         if(AgeraBus.eventRepositories().get() instanceof SampleStrEvent){
             SampleStrEvent event = (SampleStrEvent) AgeraBus.eventRepositories().get();
-            Log.d(TAG, "update: " + event.getVar() + " " + Thread.currentThread());
+            Log.d(TAG, "update in main thread: " + event.getVar() + " " + Thread.currentThread());
         }
     }
 
     @Override
     public void onEventReceiveInBackground() {
-
+        if(AgeraBus.eventRepositories().get() instanceof SampleStrEvent){
+            SampleStrEvent event = (SampleStrEvent) AgeraBus.eventRepositories().get();
+            Log.d(TAG, "update in background thread: " + event.getVar() + " " + Thread.currentThread());
+        }
     }
 }
 

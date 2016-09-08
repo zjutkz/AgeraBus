@@ -2,7 +2,6 @@ package com.zjutkz.lib.updatable;
 
 import android.os.Looper;
 
-import com.google.android.agera.Updatable;
 import com.zjutkz.lib.listener.OnEventReceiveListener;
 import com.zjutkz.lib.repository.EventRepo;
 import com.zjutkz.lib.utils.Predictable;
@@ -13,16 +12,12 @@ import java.util.concurrent.Executors;
 /**
  * Created by kangzhe on 16/9/8.
  */
-public class BackgroundUpdatable implements Updatable{
+public class BackgroundUpdatable implements ExtendedUpdatable{
 
     private OnEventReceiveListener listener;
 
     public BackgroundUpdatable(OnEventReceiveListener listener){
         this.listener = listener;
-    }
-
-    public void addedIntoRepo(EventRepo eventRepo){
-        addedIntoRepo(eventRepo,null);
     }
 
     public void addedIntoRepo(final EventRepo eventRepo, Executor executor){
