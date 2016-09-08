@@ -9,7 +9,6 @@ public class AgeraBus {
 
     private static EventRepo instance;
 
-
     public static EventRepo eventRepositories(){
         if(instance == null){
             synchronized (AgeraBus.class){

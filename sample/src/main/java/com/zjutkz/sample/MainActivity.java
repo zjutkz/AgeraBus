@@ -44,15 +44,25 @@ public class MainActivity extends AppCompatActivity implements OnEventReceiveLis
     }
 
     public void bus(View view){
-        AgeraBus.eventRepositories().post(new SampleStrEvent("This is an event"));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AgeraBus.eventRepositories().post(new SampleStrEvent("This is an event"));
+            }
+        }).start();
     }
 
     @Override
-    public void onEventReceive() {
+    public void onEventReceiveInMain() {
         if(AgeraBus.eventRepositories().get() instanceof SampleStrEvent){
             SampleStrEvent event = (SampleStrEvent) AgeraBus.eventRepositories().get();
             Log.d(TAG, "update: " + event.getVar() + " " + Thread.currentThread());
         }
+    }
+
+    @Override
+    public void onEventReceiveInBackground() {
+
     }
 }
 

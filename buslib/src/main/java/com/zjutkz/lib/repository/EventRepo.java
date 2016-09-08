@@ -2,7 +2,6 @@ package com.zjutkz.lib.repository;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.android.agera.ActivationHandler;
 import com.google.android.agera.Observables;
@@ -24,15 +23,12 @@ public final class EventRepo implements Repository<Object>, Receiver<Object>, Ac
 
     private Object holder;
 
+    private boolean hasUpdatable;
+
     public EventRepo() {
-        this(DEFAULT);
-    }
-
-
-    public EventRepo(@Nullable final Object holder) {
         this.updateDispatcher = Observables.updateDispatcher(this);
 
-        this.holder = holder;
+        this.holder = DEFAULT;
 
         postHandler = new Handler();
     }
@@ -41,9 +37,6 @@ public final class EventRepo implements Repository<Object>, Receiver<Object>, Ac
     @NonNull
     @Override
     public synchronized Object get() {
-        if (holder == null) {
-            return DEFAULT;
-        }
         return holder;
     }
 
@@ -57,7 +50,7 @@ public final class EventRepo implements Repository<Object>, Receiver<Object>, Ac
 
 
     /**
-     * post an event delay ms later
+     * post an event [delay] ms later
      * @param event
      * @param delay
      */
@@ -68,6 +61,10 @@ public final class EventRepo implements Repository<Object>, Receiver<Object>, Ac
                 accept(event);
             }
         },delay);
+    }
+
+    public boolean hasUpdatable(){
+        return this.hasUpdatable;
     }
 
     @Override
@@ -91,11 +88,11 @@ public final class EventRepo implements Repository<Object>, Receiver<Object>, Ac
 
     @Override
     public void observableActivated(@NonNull UpdateDispatcher caller) {
-        
+        hasUpdatable = true;
     }
 
     @Override
     public void observableDeactivated(@NonNull UpdateDispatcher caller) {
-
+        hasUpdatable = false;
     }
 }

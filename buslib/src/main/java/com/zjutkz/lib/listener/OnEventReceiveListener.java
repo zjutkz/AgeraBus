@@ -5,5 +5,7 @@ package com.zjutkz.lib.listener;
  */
 public interface OnEventReceiveListener {
 
-    void onEventReceive();
+    void onEventReceiveInMain();
+
+    void onEventReceiveInBackground();
 }

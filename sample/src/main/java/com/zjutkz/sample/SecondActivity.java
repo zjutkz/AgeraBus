@@ -36,7 +36,7 @@ public class SecondActivity extends AppCompatActivity implements OnEventReceiveL
     }
 
     @Override
-    public void onEventReceive() {
+    public void onEventReceiveInBackground() {
         if(AgeraBus.eventRepositories().get() instanceof BackgroundStrEvent){
             try {
                 Thread.sleep(2000);
@@ -46,5 +46,10 @@ public class SecondActivity extends AppCompatActivity implements OnEventReceiveL
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onEventReceiveInMain() {
+
     }
 }

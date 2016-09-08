@@ -27,6 +27,6 @@ public class NormalUpdatable implements Updatable{
     @Override
     public void update() {
         Predictable.checkNull(listener,"OnEventReceiverListener cannot be null!");
-        listener.onEventReceive();
+        listener.onEventReceiveInMain();
     }
 }
