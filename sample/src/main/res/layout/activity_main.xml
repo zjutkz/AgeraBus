@@ -16,14 +16,20 @@
         android:onClick="jump"/>
 
     <Button
-        android:text="bus_2"
+        android:text="delay_bus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="bus_2"/>
+        android:onClick="delay_bus"/>
 
     <Button
         android:text="bus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="bus"/>
+
+    <Button
+        android:text="thread_bus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="thread_bus"/>
 </LinearLayout>

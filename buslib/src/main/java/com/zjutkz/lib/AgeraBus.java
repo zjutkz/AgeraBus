@@ -1,59 +1,24 @@
 package com.zjutkz.lib;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
-import com.google.android.agera.BaseObservable;
-import com.google.android.agera.Receiver;
-import com.google.android.agera.Supplier;
+import com.zjutkz.lib.repository.EventRepo;
 
 /**
  * Created by kangzhe on 16/9/7.
  */
-public class AgeraBus extends BaseObservable implements Receiver<Object>,Supplier<Object> {
+public class AgeraBus {
 
-    private static volatile AgeraBus instance;
-    private static final Object DEFAULT = new Object();
+    private static EventRepo instance;
 
-    private Object holder;
 
-    public static AgeraBus getInstance() {
+    public static EventRepo eventRepositories(){
         if(instance == null){
             synchronized (AgeraBus.class){
                 if(instance == null){
-                    instance = new AgeraBus();
+                    instance = new EventRepo();
                 }
             }
         }
+
         return instance;
-    }
-
-    public AgeraBus(){
-        holder = DEFAULT;
-    }
-
-    @Override
-    public void accept(@NonNull Object value) {
-        synchronized (this) {
-            this.holder = value;
-        }
-
-        dispatchUpdate();
-    }
-
-    @NonNull
-    @Override
-    public Object get() {
-        return holder;
-    }
-
-    @Override
-    protected void observableActivated() {
-        Log.d("TAG", "observableActivated: ");
-    }
-
-    @Override
-    protected void observableDeactivated() {
-        Log.d("TAG", "observableDeactivated: ");
     }
 }

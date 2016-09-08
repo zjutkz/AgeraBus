@@ -20,24 +20,24 @@ public class SecondActivity extends AppCompatActivity implements Updatable {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        AgeraBus.getInstance().addUpdatable(this);
+        AgeraBus.eventRepositories().addUpdatableInBackground(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AgeraBus.getInstance().removeUpdatable(this);
+        AgeraBus.eventRepositories().removeUpdatable(this);
     }
 
     public void bus_2_2(View view){
-        AgeraBus.getInstance().accept(new SampleStrEvent("This is second activity bus"));
+        AgeraBus.eventRepositories().post(new SampleStrEvent("This is second activity bus"));
     }
 
     @Override
     public void update() {
-        if(AgeraBus.getInstance().get() instanceof SampleStrEvent){
-            SampleStrEvent event = (SampleStrEvent) AgeraBus.getInstance().get();
-            Log.d("TAG", "second update: " + event.getVar());
+        if(AgeraBus.eventRepositories().get() instanceof SampleStrEvent){
+            SampleStrEvent event = (SampleStrEvent) AgeraBus.eventRepositories().get();
+            Log.d("TAG", "second update: " + event.getVar() + " " + Thread.currentThread());
         }
     }
 }

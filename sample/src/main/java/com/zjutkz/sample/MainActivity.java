@@ -23,13 +23,13 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AgeraBus.getInstance().addUpdatable(this);
+        AgeraBus.eventRepositories().addUpdatable(MainActivity.this);
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AgeraBus.getInstance().removeUpdatable(this);
+        AgeraBus.eventRepositories().removeUpdatable(this);
     }
 
     public void jump(View view){
@@ -37,20 +37,32 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         startActivity(intent);
     }
 
-    public void bus_2(View view){
-        AgeraBus.getInstance().accept(new SampleStrEvent("This is an event_2"));
+    public void delay_bus(View view){
+        AgeraBus.eventRepositories().postDelay(new SampleStrEvent("This is a delay event"),1000);
     }
 
     public void bus(View view){
-        AgeraBus.getInstance().accept(new SampleStrEvent("This is an event"));
+        AgeraBus.eventRepositories().post(new SampleStrEvent("This is an event"));
     }
 
+    public void thread_bus(View view){
+        /*try {
+            AgeraBus.eventRepositories().postWithBackground(getEventAfter2s());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+    }
+
+    private Object getEventAfter2s() throws InterruptedException {
+        //Thread.sleep(2000);
+        return new SampleStrEvent("This is a time-consuming event");
+    }
 
     @Override
     public void update() {
-        if(AgeraBus.getInstance().get() instanceof SampleStrEvent){
-            SampleStrEvent event = (SampleStrEvent) AgeraBus.getInstance().get();
-            Log.d(TAG, "update: " + event.getVar());
+        if(AgeraBus.eventRepositories().get() instanceof SampleStrEvent){
+            SampleStrEvent event = (SampleStrEvent) AgeraBus.eventRepositories().get();
+            Log.d(TAG, "update: " + event.getVar() + " " + Thread.currentThread());
         }
     }
 }
