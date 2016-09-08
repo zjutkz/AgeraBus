@@ -7,7 +7,7 @@ import com.zjutkz.lib.repository.EventRepo;
  */
 public class AgeraBus {
 
-    private static EventRepo instance;
+    private static volatile EventRepo instance;
 
     public static EventRepo eventRepositories(){
         if(instance == null){

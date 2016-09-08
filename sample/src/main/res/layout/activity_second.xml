@@ -6,9 +6,9 @@
     android:layout_height="match_parent">
 
     <Button
-        android:text="bus_2_2"
+        android:text="background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="bus_2_2"/>
+        android:onClick="background"/>
 
 </LinearLayout>

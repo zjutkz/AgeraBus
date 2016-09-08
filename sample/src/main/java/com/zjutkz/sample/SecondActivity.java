@@ -31,7 +31,7 @@ public class SecondActivity extends AppCompatActivity implements OnEventReceiveL
         backgroundUpdatable.removedFromRepo(AgeraBus.eventRepositories());
     }
 
-    public void bus_2_2(View view){
+    public void background(View view){
         AgeraBus.eventRepositories().post(new BackgroundStrEvent("This is second activity bus"));
     }
 

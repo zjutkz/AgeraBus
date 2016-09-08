@@ -6,7 +6,22 @@ It is an Android event bus based on Agera.
 
 #Download
 
-I will post to maven A.S.A.P.
+###gradle
+
+```groovy
+compile 'com.zjutkz:AgeraBus:1.0.0'
+```
+
+###maven
+
+```html
+<dependency>
+<groupId>com.zjutkz</groupId>
+<artifactId>AgeraBus</artifactId>
+<version>1.0.0</version>
+<type>pom</type>
+</dependency>
+```
 
 
 
