@@ -1,0 +1,106 @@
+group = "com.zjutkz"
+version = "1.0.0"
+project.archivesBaseName = "AgeraBus"
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += configurations.compile
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "http://docs.oracle.com/javase/7/docs/api"
+        title "AgeraBus"
+    }
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "zjutkz"
+            name "zjutkz"
+            email "suuuperwayne@gmail.com"
+        }
+    }
+    "dependencies " {
+        dependency{
+            groupId "com.google.android.agera"
+            artifactId "agera"
+            "version " "1.2.0-beta2"
+            //同dependencies
+        }
+    }
+
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId "AgeraBus"
+
+            pom{
+                packaging 'aar'
+            }
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', "An android event bus based on Agera")
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+
+    user = properties.getProperty('BINTRAY_USER');
+    key = properties.getProperty('BINTRAY_KEY');
+
+
+
+    configurations = ['archives']
+    publications = ['mavenJava']
+    publish = true
+
+    pkg {
+        repo = 'maven'
+        name = "AgeraBus"
+        desc = "An android event bus based on Agera"
+        websiteUrl = "https://github.com/zjutkz/AgeraBus"
+        issueTrackerUrl = "https://github.com/zjutkz/AgeraBus/issues"
+        vcsUrl = "https://github.com/zjutkz/AgeraBus"
+        licenses = ['Apache-2.0']
+        publicDownloadNumbers = true
+    }
+}
