@@ -27,9 +27,4 @@
         android:layout_height="wrap_content"
         android:onClick="bus"/>
 
-    <Button
-        android:text="thread_bus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="thread_bus"/>
 </LinearLayout>

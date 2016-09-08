@@ -6,30 +6,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.google.android.agera.Updatable;
 import com.zjutkz.lib.AgeraBus;
+import com.zjutkz.lib.listener.OnEventReceiveListener;
+import com.zjutkz.lib.updatable.NormalUpdatable;
 import com.zjutkz.sample.event.SampleStrEvent;
 
 
 /**
  * Created by kangzhe on 16/9/8.
  */
-public class MainActivity extends AppCompatActivity implements Updatable {
+public class MainActivity extends AppCompatActivity implements OnEventReceiveListener{
 
     private static final String TAG = "MainActivity";
+
+    private NormalUpdatable normalUpdatable = new NormalUpdatable(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        AgeraBus.eventRepositories().addUpdatable(MainActivity.this);
+        normalUpdatable.addedIntoRepo(AgeraBus.eventRepositories());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AgeraBus.eventRepositories().removeUpdatable(this);
+        normalUpdatable.removedFromRepo(AgeraBus.eventRepositories());
     }
 
     public void jump(View view){
@@ -45,21 +47,8 @@ public class MainActivity extends AppCompatActivity implements Updatable {
         AgeraBus.eventRepositories().post(new SampleStrEvent("This is an event"));
     }
 
-    public void thread_bus(View view){
-        /*try {
-            AgeraBus.eventRepositories().postWithBackground(getEventAfter2s());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-    }
-
-    private Object getEventAfter2s() throws InterruptedException {
-        //Thread.sleep(2000);
-        return new SampleStrEvent("This is a time-consuming event");
-    }
-
     @Override
-    public void update() {
+    public void onEventReceive() {
         if(AgeraBus.eventRepositories().get() instanceof SampleStrEvent){
             SampleStrEvent event = (SampleStrEvent) AgeraBus.eventRepositories().get();
             Log.d(TAG, "update: " + event.getVar() + " " + Thread.currentThread());

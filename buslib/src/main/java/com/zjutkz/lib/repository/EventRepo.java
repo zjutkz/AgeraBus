@@ -1,7 +1,6 @@
 package com.zjutkz.lib.repository;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -11,9 +10,6 @@ import com.google.android.agera.Receiver;
 import com.google.android.agera.Repository;
 import com.google.android.agera.Updatable;
 import com.google.android.agera.UpdateDispatcher;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by kangzhe on 16/9/8.
@@ -80,29 +76,6 @@ public final class EventRepo implements Repository<Object>, Receiver<Object>, Ac
             this.holder = holder;
         }
         updateDispatcher.update();
-    }
-
-    /**
-     * add an updatable whitch receive events in background thread
-     * @param updatable
-     */
-    public void addUpdatableInBackground(@NonNull Updatable updatable){
-        addUpdatableInBackground(updatable,null);
-    }
-
-    public void addUpdatableInBackground(@NonNull final Updatable updatable, Executor executor){
-        if(executor == null){
-            executor = Executors.newSingleThreadExecutor();
-        }
-
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                addUpdatable(updatable);
-                Looper.loop();
-            }
-        });
     }
 
     @Override 
