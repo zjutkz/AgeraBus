@@ -9,7 +9,7 @@ It is an Android event bus based on Agera.
 ###gradle
 
 ```groovy
-compile 'com.zjutkz:AgeraBus:1.0.0'
+compile 'com.zjutkz:AgeraBus:1.0.1'
 ```
 
 ###maven
