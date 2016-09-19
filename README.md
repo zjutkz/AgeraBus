@@ -27,7 +27,7 @@ compile 'com.zjutkz:AgeraBus:1.0.1'
 
 #Usage
 
-You can see make sense how it works with the help of the sample in this repo.It is completely based on Agera,so before you using it,you'd better know the principle of Agera.
+You can make sense how it works with the help of the sample in this repo.It is completely based on Agera,so before you using it,you'd better know the principle of Agera.
 
 
 
